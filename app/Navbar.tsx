@@ -8,9 +8,9 @@ export default function Navbar() {
     const [address, setAddress] = useState('')
 
     async function connectWallet() {
-        if (typeof window.ethereum !== 'undefined') {
+        if (typeof (window as any).ethereum !== 'undefined') {
             try {
-                const accounts = await window.ethereum.request({
+                const accounts = await (window as any).ethereum.request({
                     method: 'eth_requestAccounts'
                 })
                 setAddress(accounts[0])
