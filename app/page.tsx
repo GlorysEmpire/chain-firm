@@ -1,4 +1,5 @@
 import Navbar from './Navbar'
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -17,12 +18,16 @@ export default function Home() {
       </p>
 
       <div className="flex gap-4">
-        <button className="bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-gray-200 transition">
-          Start Trading
-        </button>
-        <button className="border border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition">
-          Invest in the Pool
-        </button>
+        <Link href="/trader">
+          <button className="bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-gray-200 transition">
+            Start Trading
+          </button>
+        </Link>
+        <Link href="/investor">
+          <button className="border border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition">
+            Invest in the Pool
+          </button>
+        </Link>
       </div>
 
     </main>
