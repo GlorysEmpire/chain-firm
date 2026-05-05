@@ -31,7 +31,7 @@ export default function Navbar() {
         <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 border-b border-gray-800 bg-black">
 
             <div className="text-white font-bold text-xl">
-                ChainFirm
+                Glofi
             </div>
 
             <div className="flex gap-8">
@@ -43,6 +43,9 @@ export default function Navbar() {
                 </Link>
                 <Link href="/investor" className="text-gray-400 hover:text-white transition">
                     Investors
+                </Link>
+                <Link href="/governance" className="text-gray-400 hover:text-white transition">
+                    Governance
                 </Link>
             </div>
 
