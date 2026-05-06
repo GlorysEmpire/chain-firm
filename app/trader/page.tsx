@@ -3,13 +3,20 @@
 import Navbar from '../Navbar'
 import Footer from '../Footer'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useWallet } from '../WalletContext'
 
 export default function TraderPage() {
+    const { walletAddress, connectWallet: connectWalletGlobal, connected } = useWallet()
     const [selected, setSelected] = useState('tier2')
     const [step, setStep] = useState(0)
-    const { walletAddress, connectWallet: connectWalletGlobal } = useWallet()
+
+    // If wallet disconnects mid-flow, reset to start
+    useEffect(() => {
+        if (!connected && step > 0) {
+            setStep(0)
+        }
+    }, [connected])
 
     const tiers = {
         tier1: {
@@ -40,18 +47,11 @@ export default function TraderPage() {
 
     const tier = tiers[selected as keyof typeof tiers]
 
-    // Check on page load if wallet is already connected
-
-
     async function connectWallet() {
         await connectWalletGlobal()
-        if (walletAddress) {
-            setStep(3)
-        } else {
-            setTimeout(() => {
-                if (walletAddress) setStep(3)
-            }, 500)
-        }
+        setTimeout(() => {
+            if (walletAddress) setStep(3)
+        }, 500)
     }
 
     async function switchToPolygon() {
@@ -63,15 +63,6 @@ export default function TraderPage() {
             setStep(4)
         } catch (error) {
             alert('Please switch to Polygon network in your wallet.')
-        }
-    }
-
-    // When begin challenge is clicked check if wallet already connected
-    function handleBeginChallenge() {
-        if (walletAddress) {
-            setStep(3) // skip connect wallet step
-        } else {
-            setStep(1) // go to review rules first
         }
     }
 
@@ -222,10 +213,10 @@ export default function TraderPage() {
                             </button>
                             <button
                                 onClick={() => {
-                                    if (walletAddress) {
-                                        setStep(3) // already connected, skip to network
+                                    if (connected) {
+                                        setStep(3)
                                     } else {
-                                        setStep(2) // go to connect wallet
+                                        setStep(2)
                                     }
                                 }}
                                 className="flex-1 bg-white text-black py-4 rounded-full font-bold hover:bg-gray-200 transition"
@@ -310,7 +301,7 @@ export default function TraderPage() {
                         </button>
 
                         <button
-                            onClick={() => setStep(walletAddress ? 1 : 2)}
+                            onClick={() => setStep(connected ? 1 : 2)}
                             className="w-full border border-gray-700 text-gray-400 py-4 rounded-full font-bold hover:border-white hover:text-white transition"
                         >
                             Back
