@@ -3,7 +3,7 @@
 import Navbar from '../Navbar'
 import Footer from '../Footer'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useWallet } from '../WalletContext'
 
 export default function InvestorPage() {
@@ -11,6 +11,15 @@ export default function InvestorPage() {
     const [amount, setAmount] = useState('')
     const [step, setStep] = useState(0)
     const [deposited, setDeposited] = useState(false)
+
+    // If wallet disconnects mid-flow, reset to start
+    useEffect(() => {
+        if (!connected && step > 0) {
+            setStep(0)
+            setDeposited(false)
+            setAmount('')
+        }
+    }, [connected])
 
     function shortAddress(addr: string) {
         return addr.slice(0, 6) + '...' + addr.slice(-4)
