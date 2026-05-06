@@ -43,9 +43,9 @@ export default function Navbar() {
 
                 {connected ? (
                     <div className="flex items-center gap-3">
-                        <span className="text-green-400 text-sm font-semibold">
+                        <Link href="/dashboard" className="text-green-400 text-sm font-semibold hover:text-green-300 transition">
                             {shortAddress(walletAddress)}
-                        </span>
+                        </Link>
                         <button
                             onClick={handleDisconnect}
                             className="border border-gray-700 text-gray-400 px-5 py-2 rounded-full text-sm font-semibold hover:border-red-500 hover:text-red-400 transition"
