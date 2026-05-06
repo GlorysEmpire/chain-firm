@@ -1,3 +1,4 @@
+import Footer from '../Footer'
 import Navbar from '../Navbar'
 
 export default function TraderPage() {
@@ -53,6 +54,7 @@ export default function TraderPage() {
                 </div>
 
             </div>
+            <Footer />
 
         </main>
     )

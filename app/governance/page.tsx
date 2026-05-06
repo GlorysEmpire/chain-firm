@@ -1,3 +1,4 @@
+import Footer from '../Footer'
 import Navbar from '../Navbar'
 
 export default function GovernancePage() {
@@ -120,6 +121,7 @@ export default function GovernancePage() {
                     </div>
                 </div>
             </div>
+            <Footer />
 
         </main>
     )

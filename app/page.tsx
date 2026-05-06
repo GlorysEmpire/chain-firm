@@ -1,3 +1,4 @@
+import Footer from './Footer'
 import Navbar from './Navbar'
 import Link from 'next/link'
 
@@ -88,7 +89,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-
+      <Footer />
     </main>
   )
 }

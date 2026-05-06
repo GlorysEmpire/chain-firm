@@ -1,3 +1,4 @@
+import Footer from '../Footer'
 import Navbar from '../Navbar'
 
 export default function InvestorPage() {
@@ -104,6 +105,7 @@ export default function InvestorPage() {
 
                 </div>
             </div>
+            <Footer />
 
         </main>
     )
