@@ -1,6 +1,9 @@
-import Footer from './Footer'
+'use client'
+
 import Navbar from './Navbar'
+import Footer from './Footer'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 export default function Home() {
   return (
@@ -10,15 +13,33 @@ export default function Home() {
 
       {/* Hero Section */}
       <div className="flex flex-col items-center justify-center px-6 pt-40 pb-20 text-center">
-        <h1 className="text-7xl font-bold text-center mb-6">
+
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="text-7xl font-bold text-center mb-6"
+        >
           The Future of Prop Trading
-        </h1>
-        <p className="text-xl text-gray-200 text-center max-w-2xl mb-10">
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="text-xl text-gray-200 text-center max-w-2xl mb-10"
+        >
           A fully on-chain proprietary trading firm. No trust required.
           Every rule, every payout, every allocation — executed automatically
           by smart contracts.
-        </p>
-        <div className="flex gap-4">
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+          className="flex gap-4"
+        >
           <Link href="/trader">
             <button className="bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-gray-200 transition">
               Start Trading
@@ -29,18 +50,31 @@ export default function Home() {
               Invest in the Pool
             </button>
           </Link>
-        </div>
+        </motion.div>
+
       </div>
 
       {/* How It Works Section */}
       <div className="px-6 pb-24 max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-16">
+        <motion.h2
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className="text-3xl font-bold text-center mb-16"
+        >
           How It Works
-        </h2>
+        </motion.h2>
 
         <div className="grid grid-cols-3 gap-8">
 
-          <div className="flex flex-col items-center text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center text-center"
+          >
             <div className="text-5xl mb-6">🏆</div>
             <h3 className="text-xl font-bold mb-3">Traders Compete</h3>
             <p className="text-gray-400">
@@ -48,18 +82,31 @@ export default function Home() {
               Smart contracts evaluate your performance automatically —
               no human bias, no manipulation.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col items-center text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center text-center"
+          >
             <div className="text-5xl mb-6">💰</div>
             <h3 className="text-xl font-bold mb-3">Investors Fund the Pool</h3>
             <p className="text-gray-400">
               Deposit USDC, receive governance tokens.
-              Your stake grows as the pool grows.
+              Your stake grows as profitable traders
+              generate returns for the pool.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col items-center text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-center text-center"
+          >
             <div className="text-5xl mb-6">⚡</div>
             <h3 className="text-xl font-bold mb-3">Smart Contracts Execute</h3>
             <p className="text-gray-400">
@@ -67,13 +114,19 @@ export default function Home() {
               Every payout, every allocation, every rule —
               enforced automatically by code.
             </p>
-          </div>
+          </motion.div>
 
         </div>
       </div>
 
       {/* Stats Section */}
-      <div className="border-t border-gray-800 px-6 py-16">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.7 }}
+        viewport={{ once: true }}
+        className="border-t border-gray-800 px-6 py-16"
+      >
         <div className="max-w-4xl mx-auto grid grid-cols-3 gap-8 text-center">
           <div>
             <p className="text-4xl font-bold mb-2">$0</p>
@@ -88,8 +141,10 @@ export default function Home() {
             <p className="text-gray-400">Average Monthly Return</p>
           </div>
         </div>
-      </div>
+      </motion.div>
+
       <Footer />
+
     </main>
   )
 }
