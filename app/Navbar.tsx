@@ -5,7 +5,7 @@ import { useWallet } from './WalletContext'
 import { useState } from 'react'
 
 export default function Navbar() {
-    const { connected, walletAddress, connectWallet, disconnectWallet } = useWallet()
+    const { connected, walletAddress, connectWallet, disconnectWallet, loading } = useWallet()
     const [showDisconnectMessage, setShowDisconnectMessage] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
 
@@ -69,9 +69,10 @@ export default function Navbar() {
                         ) : (
                             <button
                                 onClick={connectWallet}
-                                className="bg-white text-black px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-200 transition"
+                                disabled={loading}
+                                className="bg-white text-black px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Connect Wallet
+                                {loading ? 'Connecting...' : 'Connect Wallet'}
                             </button>
                         )}
                     </div>
@@ -132,9 +133,10 @@ export default function Navbar() {
                             ) : (
                                 <button
                                     onClick={() => { connectWallet(); setMenuOpen(false) }}
-                                    className="w-full bg-white text-black py-3 rounded-full font-semibold hover:bg-gray-200 transition"
+                                    disabled={loading}
+                                    className="w-full bg-white text-black py-3 rounded-full font-semibold hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    Connect Wallet
+                                    {loading ? 'Connecting...' : 'Connect Wallet'}
                                 </button>
                             )}
                         </div>

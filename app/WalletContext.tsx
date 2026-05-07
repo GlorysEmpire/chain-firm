@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 type WalletContextType = {
     walletAddress: string
     connected: boolean
+    loading: boolean
     connectWallet: () => Promise<void>
     disconnectWallet: () => void
 }
@@ -12,12 +13,14 @@ type WalletContextType = {
 const WalletContext = createContext<WalletContextType>({
     walletAddress: '',
     connected: false,
+    loading: false,
     connectWallet: async () => { },
     disconnectWallet: () => { },
 })
 
 export function WalletProvider({ children }: { children: React.ReactNode }) {
     const [walletAddress, setWalletAddress] = useState('')
+    const [loading, setLoading] = useState(false)
     const connected = walletAddress !== ''
 
     useEffect(() => {
@@ -37,6 +40,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     async function connectWallet() {
         if (typeof (window as any).ethereum !== 'undefined') {
             try {
+                setLoading(true)
                 const accounts = await (window as any).ethereum.request({
                     method: 'eth_requestAccounts'
                 })
@@ -45,6 +49,8 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
                 }
             } catch (error) {
                 alert('Wallet connection rejected. Please try again.')
+            } finally {
+                setLoading(false)
             }
         } else {
             alert('Please install MetaMask to continue. Visit metamask.io')
@@ -56,7 +62,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <WalletContext.Provider value={{ walletAddress, connected, connectWallet, disconnectWallet }}>
+        <WalletContext.Provider value={{ walletAddress, connected, loading, connectWallet, disconnectWallet }}>
             {children}
         </WalletContext.Provider>
     )
