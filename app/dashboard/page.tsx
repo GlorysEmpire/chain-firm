@@ -20,7 +20,6 @@ export default function DashboardPage() {
         return addr.slice(0, 6) + '...' + addr.slice(-4)
     }
 
-    // Redirect to home if not connected
     useEffect(() => {
         const timer = setTimeout(() => {
             if (!connected) {
@@ -30,7 +29,6 @@ export default function DashboardPage() {
         return () => clearTimeout(timer)
     }, [connected])
 
-    // Clear votes when wallet disconnects
     useEffect(() => {
         if (!connected) {
             setVotes({ proposal1: null, proposal2: null })
@@ -74,9 +72,23 @@ export default function DashboardPage() {
                         <p className="text-4xl font-bold mb-1">0</p>
                         <p className="text-gray-400 text-sm">No active challenges</p>
                     </div>
+
                     <div className="border border-gray-800 rounded-2xl p-6">
                         <p className="text-gray-400 text-sm mb-2">GLOFI Tokens</p>
                         <p className="text-4xl font-bold mb-1">0</p>
+                        <div className="flex justify-between items-center mt-2">
+                            <p className="text-gray-400 text-sm">Token value</p>
+                            <p className="text-white text-sm font-semibold">$1.00</p>
+                        </div>
+                        <div className="flex justify-between items-center mt-1">
+                            <p className="text-gray-400 text-sm">Holdings value</p>
+                            <p className="text-white text-sm font-semibold">$0.00</p>
+                        </div>
+                    </div>
+
+                    <div className="border border-gray-800 rounded-2xl p-6">
+                        <p className="text-gray-400 text-sm mb-2">USDC Deposited</p>
+                        <p className="text-4xl font-bold mb-1">$0</p>
                         <div className="flex justify-between items-center mt-2">
                             <p className="text-gray-400 text-sm">Your share</p>
                             <p className="text-white text-sm font-semibold">0%</p>
@@ -89,11 +101,7 @@ export default function DashboardPage() {
                             <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '0%' }}></div>
                         </div>
                     </div>
-                    <div className="border border-gray-800 rounded-2xl p-6">
-                        <p className="text-gray-400 text-sm mb-2">USDC Deposited</p>
-                        <p className="text-4xl font-bold mb-1">$0</p>
-                        <p className="text-gray-400 text-sm">In liquidity pool</p>
-                    </div>
+
                     <div className="border border-gray-800 rounded-2xl p-6">
                         <p className="text-gray-400 text-sm mb-2">Total Earnings</p>
                         <p className="text-4xl font-bold mb-1">$0</p>
@@ -155,7 +163,7 @@ export default function DashboardPage() {
                     </div>
                 </motion.div>
 
-                {/* Governance — vote directly from dashboard */}
+                {/* Governance */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -172,7 +180,6 @@ export default function DashboardPage() {
 
                     <div className="flex flex-col gap-6">
 
-                        {/* Proposal 1 */}
                         <div className="border border-gray-800 rounded-2xl p-8">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
@@ -223,7 +230,6 @@ export default function DashboardPage() {
                             )}
                         </div>
 
-                        {/* Proposal 2 */}
                         <div className="border border-gray-800 rounded-2xl p-8">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
