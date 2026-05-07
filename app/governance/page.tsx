@@ -213,7 +213,7 @@ export default function GovernancePage() {
             {/* Voting Power */}
             <div className="border-t border-gray-800 px-6 py-16 max-w-4xl mx-auto">
                 <h2 className="text-2xl font-bold mb-10">Your Voting Power</h2>
-                <div className="grid grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="border border-gray-800 rounded-2xl p-8 text-center">
                         <p className="text-gray-400 text-sm mb-2">Tokens Held</p>
                         <p className="text-4xl font-bold">0</p>

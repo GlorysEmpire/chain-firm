@@ -202,7 +202,7 @@ export default function InvestorPage() {
                     Live Pool Statistics
                 </h2>
 
-                <div className="grid grid-cols-3 gap-6 mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                     <div className="border border-gray-800 rounded-2xl p-8 text-center">
                         <p className="text-gray-400 text-sm mb-2">Total Pool Size</p>
                         <p className="text-4xl font-bold">$0</p>

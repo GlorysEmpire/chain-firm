@@ -116,7 +116,7 @@ export default function TraderPage() {
                         transition={{ duration: 0.3 }}
                         className="border border-gray-800 rounded-2xl p-10"
                     >
-                        <div className="flex justify-between items-start mb-10">
+                        <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-10">
                             <div>
                                 <h2 className="text-3xl font-bold mb-2">{tier.name} Challenge</h2>
                                 <p className="text-gray-400">Funded account upon passing</p>
@@ -127,7 +127,7 @@ export default function TraderPage() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-6 mb-10">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-10">
                             <div className="bg-gray-900 rounded-xl p-6 text-center">
                                 <p className="text-gray-400 text-sm mb-2">Funded Account</p>
                                 <p className="text-2xl font-bold">{tier.funded}</p>

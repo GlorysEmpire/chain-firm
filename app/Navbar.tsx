@@ -27,9 +27,9 @@ export default function Navbar() {
                 {/* Main navbar row */}
                 <div className="flex items-center justify-between px-6 py-4">
 
-                    <div className="text-white font-bold text-xl">
+                    <Link href="/" className="text-white font-bold text-xl hover:text-gray-300 transition">
                         Glofi
-                    </div>
+                    </Link>
 
                     {/* Desktop links */}
                     <div className="hidden md:flex gap-8">
@@ -79,9 +79,9 @@ export default function Navbar() {
                     {/* Mobile right side */}
                     <div className="flex md:hidden items-center gap-3">
                         {connected && (
-                            <span className="text-green-400 text-sm font-semibold">
+                            <Link href="/dashboard" className="text-green-400 text-sm font-semibold hover:text-green-300 transition">
                                 {shortAddress(walletAddress)}
-                            </span>
+                            </Link>
                         )}
                         <button
                             onClick={() => setMenuOpen(!menuOpen)}

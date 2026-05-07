@@ -65,7 +65,7 @@ export default function DashboardPage() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.7, delay: 0.2 }}
-                    className="grid grid-cols-4 gap-6 mb-16"
+                    className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
                 >
                     <div className="border border-gray-800 rounded-2xl p-6">
                         <p className="text-gray-400 text-sm mb-2">Active Challenges</p>
