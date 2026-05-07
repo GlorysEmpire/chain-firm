@@ -39,6 +39,11 @@ export default function Navbar() {
                     <Link href="/governance" className="text-gray-400 hover:text-white transition">
                         Governance
                     </Link>
+                    {connected && (
+                        <Link href="/dashboard" className="text-green-400 hover:text-green-300 transition font-semibold">
+                            Dashboard
+                        </Link>
+                    )}
                 </div>
 
                 {connected ? (

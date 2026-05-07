@@ -23,6 +23,7 @@ export default function Footer() {
                 <div>
                     <h4 className="text-white font-semibold mb-4">Resources</h4>
                     <ul className="flex flex-col gap-2">
+                        <li><a href="/about" className="text-gray-400 text-sm hover:text-white transition">About Glofi</a></li>
                         <li><a href="#" className="text-gray-400 text-sm hover:text-white transition">Whitepaper</a></li>
                         <li><a href="#" className="text-gray-400 text-sm hover:text-white transition">Documentation</a></li>
                         <li><a href="#" className="text-gray-400 text-sm hover:text-white transition">Smart Contracts</a></li>
