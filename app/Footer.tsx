@@ -26,7 +26,7 @@ export default function Footer() {
                         <li><a href="/about" className="text-gray-400 text-sm hover:text-white transition">About Glofi</a></li>
                         <li><a href="#" className="text-gray-400 text-sm hover:text-white transition">Whitepaper</a></li>
                         <li><a href="#" className="text-gray-400 text-sm hover:text-white transition">Documentation</a></li>
-                        <li><a href="#" className="text-gray-400 text-sm hover:text-white transition">Smart Contracts</a></li>
+                        <li><a href="/contracts-info" className="text-gray-400 text-sm hover:text-white transition">Smart Contracts</a></li>
                     </ul>
                 </div>
 

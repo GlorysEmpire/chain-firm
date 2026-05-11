@@ -5,9 +5,10 @@ import Footer from '../Footer'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { useWallet } from '../WalletContext'
-
+import { useGlofiToken } from '../hooks/useGlofiToken'
 export default function InvestorPage() {
     const { connected, walletAddress, connectWallet } = useWallet()
+    const { tokenBalance, totalSupply, usdcDeposited, loading: tokenLoading } = useGlofiToken(walletAddress)
     const [amount, setAmount] = useState('')
     const [step, setStep] = useState(0)
     const [deposited, setDeposited] = useState(false)
@@ -204,19 +205,25 @@ export default function InvestorPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                     <div className="border border-gray-800 rounded-2xl p-8 text-center">
-                        <p className="text-gray-400 text-sm mb-2">Total Pool Size</p>
-                        <p className="text-4xl font-bold">$0</p>
+                        <p className="text-gray-400 text-sm mb-2">Total Token Supply</p>
+                        <p className="text-4xl font-bold">
+                            {tokenLoading ? '...' : Number(totalSupply).toLocaleString()}
+                        </p>
+                        <p className="text-gray-400 text-sm mt-2">GLOFI</p>
+                    </div>
+                    <div className="border border-gray-800 rounded-2xl p-8 text-center">
+                        <p className="text-gray-400 text-sm mb-2">Your GLOFI Balance</p>
+                        <p className="text-4xl font-bold">
+                            {tokenLoading ? '...' : Number(tokenBalance).toLocaleString()}
+                        </p>
+                        <p className="text-gray-400 text-sm mt-2">GLOFI Tokens</p>
+                    </div>
+                    <div className="border border-gray-800 rounded-2xl p-8 text-center">
+                        <p className="text-gray-400 text-sm mb-2">Your USDC Deposited</p>
+                        <p className="text-4xl font-bold">
+                            ${tokenLoading ? '...' : Number(usdcDeposited).toLocaleString()}
+                        </p>
                         <p className="text-gray-400 text-sm mt-2">USDC</p>
-                    </div>
-                    <div className="border border-gray-800 rounded-2xl p-8 text-center">
-                        <p className="text-gray-400 text-sm mb-2">Active Investors</p>
-                        <p className="text-4xl font-bold">0</p>
-                        <p className="text-gray-400 text-sm mt-2">Token Holders</p>
-                    </div>
-                    <div className="border border-gray-800 rounded-2xl p-8 text-center">
-                        <p className="text-gray-400 text-sm mb-2">Total Payouts Made</p>
-                        <p className="text-4xl font-bold">$0</p>
-                        <p className="text-gray-400 text-sm mt-2">To Traders</p>
                     </div>
                 </div>
 
