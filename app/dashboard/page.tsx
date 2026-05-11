@@ -4,12 +4,14 @@ import Navbar from '../Navbar'
 import Footer from '../Footer'
 import { motion } from 'framer-motion'
 import { useWallet } from '../WalletContext'
+import { useGlofiToken } from '../hooks/useGlofiToken'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 export default function DashboardPage() {
     const { connected, walletAddress } = useWallet()
+    const { tokenBalance, totalSupply, usdcDeposited, loading: tokenLoading } = useGlofiToken(walletAddress)
     const router = useRouter()
     const [votes, setVotes] = useState<{ [key: string]: 'for' | 'against' | null }>({
         proposal1: null,
@@ -18,6 +20,12 @@ export default function DashboardPage() {
 
     function shortAddress(addr: string) {
         return addr.slice(0, 6) + '...' + addr.slice(-4)
+    }
+
+    function formatTokenAmount(amount: number): string {
+        if (amount >= 1_000_000) return (amount / 1_000_000).toFixed(2) + 'M'
+        if (amount >= 1_000) return (amount / 1_000).toFixed(2) + 'K'
+        return amount.toLocaleString()
     }
 
     useEffect(() => {
@@ -75,27 +83,35 @@ export default function DashboardPage() {
 
                     <div className="border border-gray-800 rounded-2xl p-6">
                         <p className="text-gray-400 text-sm mb-2">GLOFI Tokens</p>
-                        <p className="text-4xl font-bold mb-1">0</p>
+                        <p className="text-4xl font-bold mb-1">
+                            {tokenLoading ? '...' : formatTokenAmount(Number(tokenBalance))}
+                        </p>
                         <div className="flex justify-between items-center mt-2">
                             <p className="text-gray-400 text-sm">Token value</p>
                             <p className="text-white text-sm font-semibold">$1.00</p>
                         </div>
                         <div className="flex justify-between items-center mt-1">
                             <p className="text-gray-400 text-sm">Holdings value</p>
-                            <p className="text-white text-sm font-semibold">$0.00</p>
+                            <p className="text-white text-sm font-semibold">
+                                ${tokenLoading ? '...' : formatTokenAmount(Number(tokenBalance))}
+                            </p>
                         </div>
                     </div>
 
                     <div className="border border-gray-800 rounded-2xl p-6">
                         <p className="text-gray-400 text-sm mb-2">USDC Deposited</p>
-                        <p className="text-4xl font-bold mb-1">$0</p>
+                        <p className="text-4xl font-bold mb-1">
+                            ${tokenLoading ? '...' : formatTokenAmount(Number(usdcDeposited))}
+                        </p>
                         <div className="flex justify-between items-center mt-2">
                             <p className="text-gray-400 text-sm">Your share</p>
                             <p className="text-white text-sm font-semibold">0%</p>
                         </div>
                         <div className="flex justify-between items-center mt-1">
                             <p className="text-gray-400 text-sm">Pool size</p>
-                            <p className="text-white text-sm font-semibold">$0 USDC</p>
+                            <p className="text-white text-sm font-semibold">
+                                ${tokenLoading ? '...' : formatTokenAmount(Number(totalSupply))} GLOFI
+                            </p>
                         </div>
                         <div className="w-full bg-gray-800 rounded-full h-1.5 mt-3">
                             <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '0%' }}></div>
