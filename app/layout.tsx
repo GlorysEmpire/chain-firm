@@ -29,6 +29,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <div className="wave-1" />
+        <div className="wave-2" />
+        <div className="wave-3" />
         <WalletProvider>
           {children}
         </WalletProvider>

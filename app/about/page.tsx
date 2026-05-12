@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 export default function AboutPage() {
     return (
-        <main className="min-h-screen bg-black text-white">
+        <main className="min-h-screen text-white relative">
 
             <Navbar />
 

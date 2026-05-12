@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 
 export default function NotFound() {
     return (
-        <main className="min-h-screen bg-black text-white">
+        <main className="min-h-screen text-white relative">
             <Navbar />
             <div className="flex flex-col items-center justify-center px-6 pt-40 pb-20 text-center">
 

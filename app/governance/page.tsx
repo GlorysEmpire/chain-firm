@@ -33,7 +33,7 @@ export default function GovernancePage() {
     }
 
     return (
-        <main className="min-h-screen bg-black text-white">
+        <main className="min-h-screen text-white relative">
 
             <Navbar />
 
