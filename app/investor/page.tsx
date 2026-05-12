@@ -27,7 +27,7 @@ export default function InvestorPage() {
     }
 
     return (
-        <main className="min-h-screen text-white relative">
+        <main className="min-h-screen bg-black text-white">
 
             <Navbar />
 

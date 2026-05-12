@@ -67,7 +67,7 @@ export default function TraderPage() {
     }
 
     return (
-        <main className="min-h-screen text-white relative">
+        <main className="min-h-screen bg-black text-white">
 
             <Navbar />
 

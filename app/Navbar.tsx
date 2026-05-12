@@ -27,7 +27,7 @@ export default function Navbar() {
                 {/* Main navbar row */}
                 <div className="flex items-center justify-between px-6 py-4">
 
-                    <Link href="/" className="font-bold text-xl hover:opacity-80 transition" style={{ background: 'linear-gradient(135deg, #e2e8f0 0%, #7eb3d4 50%, #a8c8e8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                    <Link href="/" className="text-white font-bold text-xl hover:text-gray-300 transition">
                         Glofi
                     </Link>
 
