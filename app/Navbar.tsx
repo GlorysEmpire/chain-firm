@@ -27,7 +27,11 @@ export default function Navbar() {
                 {/* Main navbar row */}
                 <div className="flex items-center justify-between px-6 py-4">
 
-                    <Link href="/" className="text-white font-bold text-xl hover:text-gray-300 transition">
+                    <Link
+                        href="/"
+                        className="font-bold text-xl hover:opacity-80 transition"
+                        style={{ background: 'linear-gradient(135deg, #e2e8f0 0%, #7eb3d4 50%, #a8c8e8 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+                    >
                         Glofi
                     </Link>
 
@@ -46,7 +50,7 @@ export default function Navbar() {
                             Governance
                         </Link>
                         {connected && (
-                            <Link href="/dashboard" className="text-green-400 hover:text-green-300 transition font-semibold">
+                            <Link href="/dashboard" className="text-blue-300 hover:text-green-300 transition font-semibold">
                                 Dashboard
                             </Link>
                         )}
@@ -56,7 +60,7 @@ export default function Navbar() {
                     <div className="hidden md:flex items-center gap-3">
                         {connected ? (
                             <>
-                                <Link href="/dashboard" className="text-green-400 text-sm font-semibold hover:text-green-300 transition">
+                                <Link href="/dashboard" className="text-blue-300 text-sm font-semibold hover:text-green-300 transition">
                                     {shortAddress(walletAddress)}
                                 </Link>
                                 <button
@@ -80,7 +84,7 @@ export default function Navbar() {
                     {/* Mobile right side */}
                     <div className="flex md:hidden items-center gap-3">
                         {connected && (
-                            <Link href="/dashboard" className="text-green-400 text-sm font-semibold hover:text-green-300 transition">
+                            <Link href="/dashboard" className="text-blue-300 text-sm font-semibold hover:text-green-300 transition">
                                 {shortAddress(walletAddress)}
                             </Link>
                         )}

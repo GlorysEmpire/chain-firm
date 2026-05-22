@@ -8,6 +8,9 @@ export function useGlofiToken(walletAddress?: string) {
     const [tokenBalance, setTokenBalance] = useState<string>('0')
     const [totalSupply, setTotalSupply] = useState<string>('0')
     const [usdcDeposited, setUsdcDeposited] = useState<string>('0')
+    const [totalPoolValue, setTotalPoolValue] = useState<string>('0')
+    const [reservedLiquidity, setReservedLiquidity] = useState<string>('0')
+    const [freeLiquidity, setFreeLiquidity] = useState<string>('0')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
@@ -17,26 +20,33 @@ export function useGlofiToken(walletAddress?: string) {
                 setLoading(true)
                 setError(null)
 
-                // Connect to Polygon Amoy using a public RPC
                 const provider = new ethers.JsonRpcProvider(NETWORK.rpcUrl)
 
-                // Create contract instance
-                const contract = new ethers.Contract(
+                const tokenContract = new ethers.Contract(
                     CONTRACTS.GlofiToken.address,
                     CONTRACTS.GlofiToken.abi,
                     provider
                 )
 
-                // Get total supply — always available
-                const supply = await contract.getTotalSupply()
+                const poolContract = new ethers.Contract(
+                    CONTRACTS.GlofiPool.address,
+                    CONTRACTS.GlofiPool.abi,
+                    provider
+                )
+
+                const supply = await tokenContract.getTotalSupply()
                 setTotalSupply(ethers.formatEther(supply))
 
-                // Get wallet-specific data if address provided
+                const poolStats = await poolContract.getPoolStats()
+                setTotalPoolValue(ethers.formatUnits(poolStats[0], 6))
+                setReservedLiquidity(ethers.formatUnits(poolStats[1], 6))
+                setFreeLiquidity(ethers.formatUnits(poolStats[2], 6))
+
                 if (walletAddress) {
-                    const balance = await contract.getBalance(walletAddress)
+                    const balance = await tokenContract.getBalance(walletAddress)
                     setTokenBalance(ethers.formatEther(balance))
 
-                    const deposited = await contract.getUsdcDeposited(walletAddress)
+                    const deposited = await tokenContract.getUsdcDeposited(walletAddress)
                     setUsdcDeposited(ethers.formatEther(deposited))
                 }
 
@@ -51,5 +61,5 @@ export function useGlofiToken(walletAddress?: string) {
         fetchData()
     }, [walletAddress])
 
-    return { tokenBalance, totalSupply, usdcDeposited, loading, error }
+    return { tokenBalance, totalSupply, usdcDeposited, totalPoolValue, reservedLiquidity, freeLiquidity, loading, error }
 }
