@@ -1,10 +1,10 @@
 'use client'
 
-import Navbar from '../Navbar'
-import Footer from '../Footer'
+import Navbar from './Navbar'
+import Footer from './Footer'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import { useWallet } from '../WalletContext'
+import { useWallet } from './WalletContext'
 
 export default function TraderPage() {
     const { walletAddress, connectWallet: connectWalletGlobal, connected } = useWallet()
