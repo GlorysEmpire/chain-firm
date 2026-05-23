@@ -50,7 +50,7 @@ export default function Navbar() {
                             Governance
                         </Link>
                         {connected && (
-                            <Link href="/dashboard" className="text-blue-300 hover:text-green-300 transition font-semibold">
+                            <Link href="/dashboard" className="text-gray-400 hover:text-white transition font-semibold">
                                 Dashboard
                             </Link>
                         )}

@@ -95,7 +95,7 @@ export default function GovernancePage() {
                     <div className="border border-gray-800 rounded-2xl p-8">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <span className="text-xs font-bold bg-green-500 text-white px-3 py-1 rounded-full">
+                                <span className="text-xs font-bold bg-white text-black px-3 py-1 rounded-full">
                                     ACTIVE
                                 </span>
                                 <h3 className="text-xl font-bold mt-3">
@@ -111,11 +111,11 @@ export default function GovernancePage() {
                         </p>
                         <div className="mb-4">
                             <div className="flex justify-between text-sm mb-2">
-                                <span className="text-green-400">For — 67%</span>
-                                <span className="text-red-400">Against — 33%</span>
+                                <span className="text-gray-400">For — 67%</span>
+                                <span className="text-gray-500">Against — 33%</span>
                             </div>
                             <div className="w-full bg-gray-800 rounded-full h-2">
-                                <div className="bg-green-500 h-2 rounded-full" style={{ width: '67%' }}></div>
+                                <div className="bg-white h-2 rounded-full" style={{ width: '67%' }}></div>
                             </div>
                         </div>
 
@@ -130,7 +130,7 @@ export default function GovernancePage() {
                                 <button
                                     onClick={() => handleVote('proposal1', 'for')}
                                     className={`flex-1 py-3 rounded-full font-semibold transition ${connected
-                                        ? 'bg-green-500 text-white hover:bg-green-600'
+                                        ? 'bg-gray-600 text-white hover:bg-white hover:text-black'
                                         : 'bg-gray-800 text-gray-600 cursor-not-allowed'
                                         }`}
                                 >
@@ -153,7 +153,7 @@ export default function GovernancePage() {
                     <div className="border border-gray-800 rounded-2xl p-8">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <span className="text-xs font-bold bg-green-500 text-white px-3 py-1 rounded-full">
+                                <span className="text-xs font-bold bg-white text-black px-3 py-1 rounded-full">
                                     ACTIVE
                                 </span>
                                 <h3 className="text-xl font-bold mt-3">
@@ -169,11 +169,11 @@ export default function GovernancePage() {
                         </p>
                         <div className="mb-4">
                             <div className="flex justify-between text-sm mb-2">
-                                <span className="text-green-400">For — 89%</span>
-                                <span className="text-red-400">Against — 11%</span>
+                                <span className="text-gray-500">For — 89%</span>
+                                <span className="text-gray-400">Against — 11%</span>
                             </div>
                             <div className="w-full bg-gray-800 rounded-full h-2">
-                                <div className="bg-green-500 h-2 rounded-full" style={{ width: '89%' }}></div>
+                                <div className="bg-white h-2 rounded-full" style={{ width: '89%' }}></div>
                             </div>
                         </div>
 
@@ -188,7 +188,7 @@ export default function GovernancePage() {
                                 <button
                                     onClick={() => handleVote('proposal2', 'for')}
                                     className={`flex-1 py-3 rounded-full font-semibold transition ${connected
-                                        ? 'bg-green-500 text-white hover:bg-green-600'
+                                        ? 'bg-gray-600 text-white hover:bg-white hover:text-black'
                                         : 'bg-gray-800 text-gray-600 cursor-not-allowed'
                                         }`}
                                 >

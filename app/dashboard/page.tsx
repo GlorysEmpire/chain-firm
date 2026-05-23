@@ -63,7 +63,7 @@ export default function DashboardPage() {
                     className="mb-16"
                 >
                     <p className="text-gray-400 mb-2">Welcome back</p>
-                    <h1 className="text-4xl font-bold text-green-400">
+                    <h1 className="text-4xl font-bold text-blue-300">
                         {shortAddress(walletAddress)}
                     </h1>
                 </motion.div>
@@ -199,7 +199,7 @@ export default function DashboardPage() {
                         <div className="border border-gray-800 rounded-2xl p-8">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <span className="text-xs font-bold bg-green-500 text-white px-3 py-1 rounded-full">
+                                    <span className="text-xs font-bold bg-white text-black px-3 py-1 rounded-full">
                                         ACTIVE
                                     </span>
                                     <h3 className="text-lg font-bold mt-3">
@@ -214,11 +214,11 @@ export default function DashboardPage() {
                             </p>
                             <div className="mb-6">
                                 <div className="flex justify-between text-sm mb-2">
-                                    <span className="text-green-400">For — 67%</span>
-                                    <span className="text-red-400">Against — 33%</span>
+                                    <span className="text-gray-400">For — 67%</span>
+                                    <span className="text-gray-400">Against — 33%</span>
                                 </div>
                                 <div className="w-full bg-gray-800 rounded-full h-2">
-                                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '67%' }}></div>
+                                    <div className="bg-white h-2 rounded-full" style={{ width: '67%' }}></div>
                                 </div>
                             </div>
 
@@ -232,7 +232,7 @@ export default function DashboardPage() {
                                 <div className="flex gap-4">
                                     <button
                                         onClick={() => handleVote('proposal1', 'for')}
-                                        className="flex-1 bg-green-500 text-white py-3 rounded-full font-semibold hover:bg-green-600 transition"
+                                        className="flex-1 bg-gray-600 text-white py-3 rounded-full font-semibold hover:bg-white hover:text-black transition"
                                     >
                                         Vote For
                                     </button>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
                         <div className="border border-gray-800 rounded-2xl p-8">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <span className="text-xs font-bold bg-green-500 text-white px-3 py-1 rounded-full">
+                                    <span className="text-xs font-bold bg-white text-black px-3 py-1 rounded-full">
                                         ACTIVE
                                     </span>
                                     <h3 className="text-lg font-bold mt-3">
@@ -264,11 +264,11 @@ export default function DashboardPage() {
                             </p>
                             <div className="mb-6">
                                 <div className="flex justify-between text-sm mb-2">
-                                    <span className="text-green-400">For — 89%</span>
-                                    <span className="text-red-400">Against — 11%</span>
+                                    <span className="text-gray-400">For — 89%</span>
+                                    <span className="text-gray-400">Against — 11%</span>
                                 </div>
                                 <div className="w-full bg-gray-800 rounded-full h-2">
-                                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '89%' }}></div>
+                                    <div className="bg-white h-2 rounded-full" style={{ width: '89%' }}></div>
                                 </div>
                             </div>
 
@@ -282,7 +282,7 @@ export default function DashboardPage() {
                                 <div className="flex gap-4">
                                     <button
                                         onClick={() => handleVote('proposal2', 'for')}
-                                        className="flex-1 bg-green-500 text-white py-3 rounded-full font-semibold hover:bg-green-600 transition"
+                                        className="flex-1 bg-gray-600 text-white py-3 rounded-full font-semibold hover:bg-white hover:text-black transition"
                                     >
                                         Vote For
                                     </button>
