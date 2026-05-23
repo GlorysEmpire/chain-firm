@@ -65,8 +65,8 @@ export default function ContractsPage() {
             <p className="text-gray-400 text-sm mb-1">Status</p>
             <p className="font-bold text-lg text-green-400">Testnet Live</p>
           </div>
-          
-            href={NETWORK.explorer}
+
+          <a href={NETWORK.explorer}
             target="_blank"
             rel="noopener noreferrer"
             className="border border-gray-700 text-gray-400 px-5 py-2 rounded-full text-sm font-semibold hover:border-white hover:text-white transition whitespace-nowrap"
@@ -140,8 +140,8 @@ export default function ContractsPage() {
                   <p className="font-semibold text-sm">Pool Only</p>
                 </div>
               </div>
-              
-                href={`${NETWORK.explorer}/address/${CONTRACTS.GlofiToken.address}`}
+
+              <a href={`${NETWORK.explorer}/address/${CONTRACTS.GlofiToken.address}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 border border-gray-700 text-gray-400 px-5 py-2 rounded-full text-sm font-semibold hover:border-white hover:text-white transition"
@@ -161,8 +161,8 @@ export default function ContractsPage() {
                 <h3 className="text-xl font-bold mb-2">{contract.title}</h3>
                 <p className="text-gray-400 text-sm mb-4">{contract.desc}</p>
                 {contract.live && contract.address && (
-                  
-                    href={`${NETWORK.explorer}/address/${contract.address}`}
+
+                  <a href={`${NETWORK.explorer}/address/${contract.address}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 border border-gray-700 text-gray-400 px-5 py-2 rounded-full text-sm font-semibold hover:border-white hover:text-white transition"
@@ -189,16 +189,16 @@ export default function ContractsPage() {
             Before mainnet launch, all contracts will undergo a full third-party security audit.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            
-              href={`${NETWORK.explorer}/address/${CONTRACTS.GlofiToken.address}`}
+
+            <a href={`${NETWORK.explorer}/address/${CONTRACTS.GlofiToken.address}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-gray-200 transition"
             >
               View GLOFI Contract
             </a>
-            
-              href="https://github.com/GlorysEmpire/glofi-contracts"
+
+            <a href="https://github.com/GlorysEmpire/glofi-contracts"
               target="_blank"
               rel="noopener noreferrer"
               className="border border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition"
