@@ -80,7 +80,7 @@ export default function GovernancePage() {
                         animate={{ opacity: 1 }}
                         className="bg-gray-900 rounded-xl px-6 py-3"
                     >
-                        <p className="text-green-400 font-semibold">✓ {shortAddress(walletAddress)} — eligible to vote</p>
+                        <p className="text-blue-300 font-semibold">✓ {shortAddress(walletAddress)} — eligible to vote</p>
                     </motion.div>
                 )}
             </div>

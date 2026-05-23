@@ -69,7 +69,7 @@ export default function InvestorPage() {
                         transition={{ duration: 0.5 }}
                         className="flex items-center gap-3"
                     >
-                        <span className="text-green-400 font-semibold">
+                        <span className="text-blue-300 font-semibold">
                             ✓ {shortAddress(walletAddress)} connected
                         </span>
                         <button
