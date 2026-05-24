@@ -17,8 +17,7 @@ export default function ContractsPage() {
 
   const otherContracts = [
     { num: '02', title: 'Liquidity Pool', desc: 'Holds all investor USDC. Manages shares, tracks allocations to funded traders, enforces liquidity protection rules.', live: true, address: '0x43736a144cF4B9dcC2b9a2426C9D69F8Dd529803' },
-    { num: '03', title: 'Challenge Contract', desc: 'Manages challenge registration, fee collection, rule enforcement, drawdown monitoring and automatic pass/fail evaluation.', live: false, address: '' },
-    { num: '04', title: 'Payout Contract', desc: 'Handles profit splits for funded traders. Distributes 80% to trader, 15% to pool, 5% to platform treasury.', live: false, address: '' },
+    { num: '03', title: 'Challenge Contract', desc: 'Manages challenge registration, fee collection, rule enforcement, drawdown monitoring and automatic pass/fail evaluation.', live: true, address: '0x5c87511BEF3CddD7e1cfdABfA7173F6DA7554784' }, { num: '04', title: 'Payout Contract', desc: 'Handles profit splits for funded traders. Distributes 80% to trader, 15% to pool, 5% to platform treasury.', live: false, address: '' },
     { num: '05', title: 'Proxy Governance Contract', desc: 'Enables traditional investors without Web3 wallets to participate in governance through a designated agent system.', live: false, address: '' },
   ]
 
