@@ -5,11 +5,13 @@ import Footer from '../Footer'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { useWallet } from '../WalletContext'
+import { useGlofiChallenge } from '../hooks/useGlofiChallenge'
 
 export default function TraderPage() {
     const { walletAddress, connectWallet: connectWalletGlobal, connected } = useWallet()
     const [selected, setSelected] = useState('tier2')
     const [step, setStep] = useState(0)
+    const { registerChallenge, loading: challengeLoading, error: challengeError, txHash } = useGlofiChallenge()
 
     // If wallet disconnects mid-flow, reset to start
     useEffect(() => {
@@ -352,19 +354,25 @@ export default function TraderPage() {
                             </div>
                         )}
 
-                        <button
-                            onClick={() => setStep(5)}
-                            className="w-full bg-white text-black py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition mb-4"
-                        >
-                            Confirm Payment — {tier.fee}
-                        </button>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={async () => {
+                                    const hash = await registerChallenge(selected)
+                                    if (hash) setStep(5)
+                                }}
+                                disabled={challengeLoading}
+                                className="flex-1 bg-white text-black py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {challengeLoading ? 'Processing...' : `Confirm Payment — ${tier.fee}`}
+                            </button>
 
-                        <button
-                            onClick={() => setStep(3)}
-                            className="w-full border border-gray-700 text-gray-400 py-4 rounded-full font-bold hover:border-white hover:text-white transition"
-                        >
-                            Back
-                        </button>
+                            <button
+                                onClick={() => setStep(3)}
+                                className="flex-1 border border-gray-700 text-gray-400 py-4 rounded-full font-bold hover:border-white hover:text-white transition"
+                            >
+                                Back
+                            </button>
+                        </div>
                     </motion.div>
                 )}
 
@@ -403,6 +411,20 @@ export default function TraderPage() {
                                 </div>
                             )}
                         </div>
+                        {txHash && (
+                            <div className="bg-gray-900 rounded-xl p-4 mb-6 text-left">
+                                <p className="text-gray-400 text-sm mb-1">Transaction Hash</p>
+
+                                <a
+                                    href={`https://amoy.polygonscan.com/tx/${txHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="font-mono text-xs text-green-400 break-all hover:text-green-300"
+                                >
+                                    {txHash}
+                                </a>
+                            </div>
+                        )}
 
                         <button
                             onClick={() => { setStep(0); setSelected('tier2') }}
