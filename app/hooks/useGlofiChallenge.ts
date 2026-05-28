@@ -116,6 +116,43 @@ export function useGlofiChallenge() {
             return false
         }
     }
+    async function claimPayout() {
+        try {
+            setLoading(true)
+            setError(null)
+            const provider = new ethers.BrowserProvider((window as any).ethereum)
+            const signer = await provider.getSigner()
+            const payoutContract = new ethers.Contract(
+                CONTRACTS.GlofiPayout.address,
+                CONTRACTS.GlofiPayout.abi,
+                signer
+            )
+            const tx = await payoutContract.claimPayout()
+            await tx.wait()
+            setTxHash(tx.hash)
+            return tx.hash
+        } catch (err: any) {
+            setError(err.message || 'Claim failed')
+            return null
+        } finally {
+            setLoading(false)
+        }
+    }
 
-    return { registerChallenge, canOpenChallenge, getTraderChallenges, hasActive, loading, error, txHash }
+    async function getPendingPayout(walletAddress: string): Promise<string> {
+        try {
+            const provider = new ethers.JsonRpcProvider('https://rpc-amoy.polygon.technology')
+            const payoutContract = new ethers.Contract(
+                CONTRACTS.GlofiPayout.address,
+                CONTRACTS.GlofiPayout.abi,
+                provider
+            )
+            const amount = await payoutContract.getPendingPayout(walletAddress)
+            return ethers.formatUnits(amount, 6)
+        } catch {
+            return '0'
+        }
+    }
+
+    return { registerChallenge, canOpenChallenge, getTraderChallenges, hasActive, claimPayout, getPendingPayout, loading, error, txHash }
 }

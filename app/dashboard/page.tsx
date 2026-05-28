@@ -13,8 +13,9 @@ import Link from 'next/link'
 export default function DashboardPage() {
     const { connected, walletAddress } = useWallet()
     const { tokenBalance, totalSupply, usdcDeposited, loading: tokenLoading } = useGlofiToken(walletAddress)
-    const { getTraderChallenges } = useGlofiChallenge()
+    const { getTraderChallenges, claimPayout, getPendingPayout } = useGlofiChallenge()
     const [challenges, setChallenges] = useState<any[]>([])
+    const [pendingPayout, setPendingPayout] = useState<string>('0')
     const [challengesLoading, setChallengesLoading] = useState(false)
     const router = useRouter()
     const [votes, setVotes] = useState<{ [key: string]: 'for' | 'against' | null }>({
@@ -47,14 +48,18 @@ export default function DashboardPage() {
     }, [connected])
 
     useEffect(() => {
-        async function loadChallenges() {
+        async function loadData() {
             if (!walletAddress) return
             setChallengesLoading(true)
-            const data = await getTraderChallenges(walletAddress)
+            const [data, payout] = await Promise.all([
+                getTraderChallenges(walletAddress),
+                getPendingPayout(walletAddress)
+            ])
             setChallenges(data)
+            setPendingPayout(payout)
             setChallengesLoading(false)
         }
-        loadChallenges()
+        loadData()
     }, [walletAddress])
 
     function handleVote(proposal: string, vote: 'for' | 'against') {
@@ -145,9 +150,22 @@ export default function DashboardPage() {
                     </div>
 
                     <div className="border border-gray-800 rounded-2xl p-6">
-                        <p className="text-gray-400 text-sm mb-2">Total Earnings</p>
-                        <p className="text-4xl font-bold mb-1">$0</p>
-                        <p className="text-gray-400 text-sm">Lifetime returns</p>
+                        <p className="text-gray-400 text-sm mb-2">Pending Payout</p>
+                        <p className="text-4xl font-bold mb-1">${Number(pendingPayout).toLocaleString()}</p>
+                        {Number(pendingPayout) > 0 && (
+                            <button
+                                onClick={async () => {
+                                    const hash = await claimPayout()
+                                    if (hash) setPendingPayout('0')
+                                }}
+                                className="mt-3 w-full bg-green-500 text-white py-2 rounded-full text-sm font-semibold hover:bg-green-600 transition"
+                            >
+                                Claim Payout
+                            </button>
+                        )}
+                        {Number(pendingPayout) === 0 && (
+                            <p className="text-gray-400 text-sm">No pending payouts</p>
+                        )}
                     </div>
                 </motion.div>
 
