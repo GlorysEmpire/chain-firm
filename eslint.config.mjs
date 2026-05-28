@@ -13,6 +13,12 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  // Disable i18n enforcement until translations are ready.
+  {
+    rules: {
+      "i18next/no-literal-string": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

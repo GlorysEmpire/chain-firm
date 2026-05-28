@@ -1,7 +1,7 @@
 import GlofiTokenABI from './GlofiToken.json'
 import GlofiPoolABI from './GlofiPool.json'
 import GlofiChallengeABI from './GlofiChallenge.json'
-
+import GlofiPayoutABI from './GlofiPayout.json'
 export const CONTRACTS = {
   GlofiToken: {
     address: '0x5B9dEE5d96BdF3F7E3aa4e4FD8A0ad29b4082a2C',
