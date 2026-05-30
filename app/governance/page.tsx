@@ -5,237 +5,286 @@ import Footer from '../Footer'
 import { motion } from 'framer-motion'
 import { useWallet } from '../WalletContext'
 import { useState, useEffect } from 'react'
+import { ethers } from 'ethers'
+import { CONTRACTS, NETWORK } from '../contracts/config'
 
 export default function GovernancePage() {
     const { connected, walletAddress, connectWallet } = useWallet()
-    const [votes, setVotes] = useState<{ [key: string]: 'for' | 'against' | null }>({
-        proposal1: null,
-        proposal2: null,
-    })
+    const [proposals, setProposals] = useState<any[]>([])
+    const [loading, setLoading] = useState(false)
+    const [votingId, setVotingId] = useState<number | null>(null)
+    const [txHash, setTxHash] = useState<string | null>(null)
+    const [votedProposals, setVotedProposals] = useState<{ [key: number]: 'for' | 'against' }>({})
+    const [votingPower, setVotingPower] = useState<string>('0')
 
-    // Clear votes when wallet disconnects
     useEffect(() => {
-        if (!connected) {
-            setVotes({ proposal1: null, proposal2: null })
+        async function fetchVotingPower() {
+            if (!walletAddress) return
+            try {
+                const provider = new ethers.JsonRpcProvider(NETWORK.rpcUrl)
+                const token = new ethers.Contract(
+                    CONTRACTS.GlofiToken.address,
+                    CONTRACTS.GlofiToken.abi,
+                    provider
+                )
+                const balance = await token.balanceOf(walletAddress)
+                const formatted = ethers.formatEther(balance)
+                const n = Number(formatted)
+                if (n >= 1_000_000) setVotingPower((n / 1_000_000).toFixed(2) + 'M')
+                else if (n >= 1_000) setVotingPower((n / 1_000).toFixed(2) + 'K')
+                else setVotingPower(n.toLocaleString())
+            } catch {
+                setVotingPower('0')
+            }
         }
-    }, [connected])
+        fetchVotingPower()
+    }, [walletAddress])
 
-    function shortAddress(addr: string) {
-        return addr.slice(0, 6) + '...' + addr.slice(-4)
+    useEffect(() => {
+        loadProposals()
+    }, [])
+
+    async function loadProposals() {
+        try {
+            const provider = new ethers.JsonRpcProvider(NETWORK.rpcUrl)
+            const gov = new ethers.Contract(
+                CONTRACTS.ProxyGovernance.address,
+                CONTRACTS.ProxyGovernance.abi,
+                provider
+            )
+            const count = await gov.proposalCount()
+            const loaded = []
+            for (let i = 1; i <= Number(count); i++) {
+                const p = await gov.getProposal(i)
+                const active = await gov.isProposalActive(i)
+                loaded.push({
+                    id: i,
+                    title: p[1],
+                    description: p[2],
+                    forVotes: p[3],
+                    againstVotes: p[4],
+                    startTime: p[5],
+                    endTime: p[6],
+                    executed: p[7],
+                    passed: p[8],
+                    active
+                })
+            }
+            setProposals(loaded)
+        } catch (err) {
+            console.error('Failed to load proposals:', err)
+        }
     }
 
-    function handleVote(proposal: string, vote: 'for' | 'against') {
-        if (!connected) {
-            alert('Please connect your wallet to vote.')
-            return
+    async function castVote(proposalId: number, support: boolean) {
+        if (!connected) return
+        try {
+            setVotingId(proposalId)
+            const provider = new ethers.BrowserProvider((window as any).ethereum)
+            const signer = await provider.getSigner()
+            const gov = new ethers.Contract(
+                CONTRACTS.ProxyGovernance.address,
+                CONTRACTS.ProxyGovernance.abi,
+                signer
+            )
+            const tx = await gov.vote(proposalId, support)
+            await tx.wait()
+            setTxHash(tx.hash)
+            setVotedProposals(prev => ({ ...prev, [proposalId]: support ? 'for' : 'against' }))
+            await loadProposals()
+        } catch (err: any) {
+            console.error('Vote failed:', err)
+        } finally {
+            setVotingId(null)
         }
-        setVotes(prev => ({ ...prev, [proposal]: vote }))
+    }
+
+    function formatVotes(votes: any): string {
+        if (!votes && votes !== BigInt(0)) return '0'
+        const n = Number(ethers.formatEther(BigInt(votes.toString())))
+        if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + 'M'
+        if (n >= 1_000) return (n / 1_000).toFixed(2) + 'K'
+        return n.toLocaleString()
+    }
+
+    function getPercentage(forVotes: bigint, againstVotes: bigint): number {
+        const total = Number(forVotes) + Number(againstVotes)
+        if (total === 0) return 50
+        return Math.round((Number(forVotes) / total) * 100)
+    }
+
+    function timeRemaining(endTime: bigint): string {
+        const now = Math.floor(Date.now() / 1000)
+        const end = Number(endTime)
+        const diff = end - now
+        if (diff <= 0) return 'Ended'
+        const days = Math.floor(diff / 86400)
+        const hours = Math.floor((diff % 86400) / 3600)
+        if (days > 0) return `${days}d ${hours}h remaining`
+        return `${hours}h remaining`
     }
 
     return (
-        <main className="min-h-screen bg-black text-white">
-
+        <main className="min-h-screen text-white">
             <Navbar />
 
-            {/* Hero */}
-            <div className="flex flex-col items-center justify-center px-6 pt-40 pb-20 text-center">
-                <motion.h1
+            <div className="max-w-4xl mx-auto px-6 pt-40 pb-20">
+
+                <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7 }}
-                    className="text-5xl font-bold mb-6"
+                    className="mb-16"
                 >
-                    Governance
-                </motion.h1>
-                <motion.p
+                    <p className="text-gray-400 font-semibold mb-4">On-Chain Democracy</p>
+                    <h1 className="text-5xl font-bold mb-6">Governance</h1>
+                    <p className="text-xl text-gray-300 leading-relaxed">
+                        Every major decision at Glofi is voted on by token holders.
+                        Your GLOFI tokens are your voice. No exceptions.
+                    </p>
+                </motion.div>
+
+                {/* Stats */}
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.7, delay: 0.2 }}
-                    className="text-xl text-gray-200 max-w-2xl mb-6"
+                    className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
                 >
-                    Token holders decide the future of Glofi. Every parameter, every change,
-                    every upgrade — voted on by the community. No single person has unilateral control.
-                </motion.p>
+                    <div className="border border-gray-800 rounded-2xl p-6 text-center">
+                        <p className="text-gray-400 text-sm mb-2">Total Proposals</p>
+                        <p className="text-4xl font-bold">{proposals.length}</p>
+                    </div>
+                    <div className="border border-gray-800 rounded-2xl p-6 text-center">
+                        <p className="text-gray-400 text-sm mb-2">Active Proposals</p>
+                        <p className="text-4xl font-bold">{proposals.filter(p => p.active).length}</p>
+                    </div>
+                    <div className="border border-gray-800 rounded-2xl p-6 text-center">
+                        <p className="text-gray-400 text-sm mb-2">Your Voting Power</p>
+                        <p className="text-4xl font-bold">{connected ? votingPower + ' GLOFI' : '---'}</p>
+                    </div>
+                </motion.div>
 
-                {!connected && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5, delay: 0.3 }}
-                        className="flex flex-col items-center gap-4"
-                    >
-                        <p className="text-gray-400 text-sm">Connect your wallet to participate in governance</p>
-                        <button
-                            onClick={connectWallet}
-                            className="bg-white text-black px-8 py-3 rounded-full font-semibold hover:bg-gray-200 transition"
-                        >
-                            Connect Wallet to Vote
-                        </button>
-                    </motion.div>
-                )}
+                {/* Proposals */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.7 }}
+                    viewport={{ once: true }}
+                >
+                    <h2 className="text-2xl font-bold mb-8">
+                        {proposals.length === 0 ? 'No proposals yet' : 'Proposals'}
+                    </h2>
 
-                {connected && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="bg-gray-900 rounded-xl px-6 py-3"
-                    >
-                        <p className="text-blue-300 font-semibold">✓ {shortAddress(walletAddress)} — eligible to vote</p>
-                    </motion.div>
-                )}
-            </div>
-
-            {/* Active Proposals */}
-            <div className="px-6 pb-20 max-w-4xl mx-auto">
-                <h2 className="text-2xl font-bold mb-10">Active Proposals</h2>
-
-                <div className="flex flex-col gap-6">
-
-                    {/* Proposal 1 */}
-                    <div className="border border-gray-800 rounded-2xl p-8">
-                        <div className="flex items-start justify-between mb-4">
-                            <div>
-                                <span className="text-xs font-bold bg-white text-black px-3 py-1 rounded-full">
-                                    ACTIVE
-                                </span>
-                                <h3 className="text-xl font-bold mt-3">
-                                    Proposal #1 — Set Trader Profit Split to 80%
-                                </h3>
-                            </div>
-                            <p className="text-gray-400 text-sm">Ends in 3 days</p>
+                    {proposals.length === 0 ? (
+                        <div className="border border-gray-800 rounded-2xl p-10 text-center">
+                            <p className="text-5xl mb-4">🗳️</p>
+                            <p className="text-gray-400 mb-2">No proposals have been created yet.</p>
+                            <p className="text-gray-400 text-sm">Hold 1,000 GLOFI tokens to create a proposal.</p>
                         </div>
-                        <p className="text-gray-400 mb-6">
-                            This proposal sets the default profit split for funded traders to 80%.
-                            The remaining 20% is split between the liquidity pool (15%)
-                            and platform treasury (5%).
-                        </p>
-                        <div className="mb-4">
-                            <div className="flex justify-between text-sm mb-2">
-                                <span className="text-gray-400">For — 67%</span>
-                                <span className="text-gray-500">Against — 33%</span>
-                            </div>
-                            <div className="w-full bg-gray-800 rounded-full h-2">
-                                <div className="bg-white h-2 rounded-full" style={{ width: '67%' }}></div>
-                            </div>
+                    ) : (
+                        <div className="flex flex-col gap-6">
+                            {proposals.map((proposal) => {
+                                const pct = getPercentage(proposal.forVotes, proposal.againstVotes)
+                                const voted = votedProposals[proposal.id]
+                                return (
+                                    <div key={proposal.id} className="border border-gray-800 rounded-2xl p-8">
+                                        <div className="flex items-start justify-between mb-4">
+                                            <div>
+                                                <span className={`text-xs font-bold px-3 py-1 rounded-full ${proposal.active ? 'bg-white text-black' : 'bg-gray-700 text-gray-300'}`}>
+                                                    {proposal.active ? 'ACTIVE' : 'ENDED'}
+                                                </span>
+                                                <h3 className="text-lg font-bold mt-3">{proposal.title}</h3>
+                                            </div>
+                                            <p className="text-gray-400 text-sm whitespace-nowrap ml-4">
+                                                {timeRemaining(proposal.endTime)}
+                                            </p>
+                                        </div>
+                                        <p className="text-gray-400 text-sm mb-6">{proposal.description}</p>
+                                        <div className="mb-6">
+                                            <div className="flex justify-between text-sm mb-2">
+                                                <span className="text-gray-400">For — {formatVotes(proposal.forVotes)} GLOFI ({pct}%)</span>
+                                                <span className="text-gray-500">Against — {formatVotes(proposal.againstVotes)} GLOFI ({100 - pct}%)</span>
+                                            </div>
+                                            <div className="w-full bg-gray-800 rounded-full h-2">
+                                                <div className="bg-white h-2 rounded-full transition-all" style={{ width: `${pct}%` }}></div>
+                                            </div>
+                                        </div>
+                                        {!connected ? (
+                                            <button
+                                                onClick={connectWallet}
+                                                className="w-full border border-gray-700 text-gray-400 py-3 rounded-full font-semibold hover:border-white hover:text-white transition"
+                                            >
+                                                Connect Wallet to Vote
+                                            </button>
+                                        ) : voted ? (
+                                            <div className="bg-gray-900 rounded-xl p-4 text-center">
+                                                <p className="text-white font-semibold">
+                                                    You voted {voted === 'for' ? 'For' : 'Against'} this proposal
+                                                </p>
+                                                {txHash && (
+                                                    <a
+                                                        href={`${NETWORK.explorer}/tx/${txHash}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-xs text-gray-400 hover:text-white mt-2 block"
+                                                    >
+                                                        View transaction
+                                                    </a>
+                                                )}
+                                            </div>
+                                        ) : proposal.active ? (
+                                            <div className="flex gap-4">
+                                                <button
+                                                    onClick={() => castVote(proposal.id, true)}
+                                                    disabled={votingId === proposal.id}
+                                                    className="flex-1 bg-gray-600 text-white py-3 rounded-full font-semibold hover:bg-white hover:text-black transition disabled:opacity-50"
+                                                >
+                                                    {votingId === proposal.id ? 'Voting...' : 'Vote For'}
+                                                </button>
+                                                <button
+                                                    onClick={() => castVote(proposal.id, false)}
+                                                    disabled={votingId === proposal.id}
+                                                    className="flex-1 border border-gray-600 text-gray-400 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition disabled:opacity-50"
+                                                >
+                                                    {votingId === proposal.id ? 'Voting...' : 'Vote Against'}
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <div className="bg-gray-900 rounded-xl p-4 text-center">
+                                                <p className="text-gray-400">Voting has ended</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                )
+                            })}
                         </div>
+                    )}
+                </motion.div>
 
-                        {votes.proposal1 ? (
-                            <div className="bg-gray-900 rounded-xl p-4 text-center">
-                                <p className="text-green-400 font-semibold">
-                                    ✓ You voted {votes.proposal1 === 'for' ? 'For' : 'Against'} this proposal
-                                </p>
-                            </div>
-                        ) : (
-                            <div className="flex gap-4">
-                                <button
-                                    onClick={() => handleVote('proposal1', 'for')}
-                                    className={`flex-1 py-3 rounded-full font-semibold transition ${connected
-                                        ? 'bg-gray-600 text-white hover:bg-white hover:text-black'
-                                        : 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                                        }`}
-                                >
-                                    Vote For
-                                </button>
-                                <button
-                                    onClick={() => handleVote('proposal1', 'against')}
-                                    className={`flex-1 py-3 rounded-full font-semibold transition border ${connected
-                                        ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-white'
-                                        : 'border-gray-700 text-gray-600 cursor-not-allowed'
-                                        }`}
-                                >
-                                    Vote Against
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                {/* How Proxy Governance Works */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.7 }}
+                    viewport={{ once: true }}
+                    className="border border-gray-800 rounded-2xl p-8 mt-16"
+                >
+                    <h2 className="text-2xl font-bold mb-4">Proxy Governance</h2>
+                    <p className="text-gray-400 leading-relaxed mb-4">
+                        Traditional investors without Web3 wallets can still participate in governance.
+                        Through Glofi&apos;s proxy system, a verified agent votes on their behalf with the
+                        same token weight — fully recorded on-chain.
+                    </p>
+                    <p className="text-gray-400 leading-relaxed">
+                        The investor nominates an agent. Glofi verifies the relationship. The agent votes.
+                        The investor can revoke access at any time. No trust required beyond the initial verification.
+                    </p>
+                </motion.div>
 
-                    {/* Proposal 2 */}
-                    <div className="border border-gray-800 rounded-2xl p-8">
-                        <div className="flex items-start justify-between mb-4">
-                            <div>
-                                <span className="text-xs font-bold bg-white text-black px-3 py-1 rounded-full">
-                                    ACTIVE
-                                </span>
-                                <h3 className="text-xl font-bold mt-3">
-                                    Proposal #2 — Add Staking Challenge Tier
-                                </h3>
-                            </div>
-                            <p className="text-gray-400 text-sm">Ends in 5 days</p>
-                        </div>
-                        <p className="text-gray-400 mb-6">
-                            This proposal introduces a staking-based challenge entry where traders
-                            lock governance tokens instead of paying a flat fee.
-                            On pass, stake is returned. On fail, stake is slashed to the pool.
-                        </p>
-                        <div className="mb-4">
-                            <div className="flex justify-between text-sm mb-2">
-                                <span className="text-gray-500">For — 89%</span>
-                                <span className="text-gray-400">Against — 11%</span>
-                            </div>
-                            <div className="w-full bg-gray-800 rounded-full h-2">
-                                <div className="bg-white h-2 rounded-full" style={{ width: '89%' }}></div>
-                            </div>
-                        </div>
-
-                        {votes.proposal2 ? (
-                            <div className="bg-gray-900 rounded-xl p-4 text-center">
-                                <p className="text-green-400 font-semibold">
-                                    ✓ You voted {votes.proposal2 === 'for' ? 'For' : 'Against'} this proposal
-                                </p>
-                            </div>
-                        ) : (
-                            <div className="flex gap-4">
-                                <button
-                                    onClick={() => handleVote('proposal2', 'for')}
-                                    className={`flex-1 py-3 rounded-full font-semibold transition ${connected
-                                        ? 'bg-gray-600 text-white hover:bg-white hover:text-black'
-                                        : 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                                        }`}
-                                >
-                                    Vote For
-                                </button>
-                                <button
-                                    onClick={() => handleVote('proposal2', 'against')}
-                                    className={`flex-1 py-3 rounded-full font-semibold transition border ${connected
-                                        ? 'border-red-500 text-red-500 hover:bg-red-500 hover:text-white'
-                                        : 'border-gray-700 text-gray-600 cursor-not-allowed'
-                                        }`}
-                                >
-                                    Vote Against
-                                </button>
-                            </div>
-                        )}
-                    </div>
-
-                </div>
-            </div>
-
-            {/* Voting Power */}
-            <div className="border-t border-gray-800 px-6 py-16 max-w-4xl mx-auto">
-                <h2 className="text-2xl font-bold mb-10">Your Voting Power</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="border border-gray-800 rounded-2xl p-8 text-center">
-                        <p className="text-gray-400 text-sm mb-2">Tokens Held</p>
-                        <p className="text-4xl font-bold">0</p>
-                        <p className="text-gray-400 text-sm mt-2">GLOFI tokens</p>
-                    </div>
-                    <div className="border border-gray-800 rounded-2xl p-8 text-center">
-                        <p className="text-gray-400 text-sm mb-2">Voting Power</p>
-                        <p className="text-4xl font-bold">0%</p>
-                        <p className="text-gray-400 text-sm mt-2">Of total supply</p>
-                    </div>
-                    <div className="border border-gray-800 rounded-2xl p-8 text-center">
-                        <p className="text-gray-400 text-sm mb-2">Proposals Voted</p>
-                        <p className="text-4xl font-bold">
-                            {Object.values(votes).filter(v => v !== null).length}
-                        </p>
-                        <p className="text-gray-400 text-sm mt-2">This session</p>
-                    </div>
-                </div>
             </div>
 
             <Footer />
-
         </main>
     )
 }

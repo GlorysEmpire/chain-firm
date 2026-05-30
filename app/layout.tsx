@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import "./i18n";
 import { WalletProvider } from "./WalletContext";
+import I18nProvider from "./I18nProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +31,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <WalletProvider>
-          {children}
-        </WalletProvider>
+        <I18nProvider>
+          <WalletProvider>
+            {children}
+          </WalletProvider>
+        </I18nProvider>
       </body>
     </html>
   );

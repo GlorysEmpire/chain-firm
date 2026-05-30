@@ -20,6 +20,10 @@ export const CONTRACTS = {
     address: '0x78A9401c255Af3Df3DA73fbE7Fd7bB423a2d5d6c',
     abi: GlofiPayoutABI,
   },
+  ProxyGovernance: {
+    address: '0x30E07C200F18736665B69454796a486377d49EB2',
+    abi: ProxyGovernanceABI,
+  },
 }
 
 export const NETWORK = {
