@@ -2,6 +2,7 @@ import GlofiTokenABI from './GlofiToken.json'
 import GlofiPoolABI from './GlofiPool.json'
 import GlofiChallengeABI from './GlofiChallenge.json'
 import GlofiPayoutABI from './GlofiPayout.json'
+import ProxyGovernanceABI from './ProxyGovernance.json'
 export const CONTRACTS = {
   GlofiToken: {
     address: '0x5B9dEE5d96BdF3F7E3aa4e4FD8A0ad29b4082a2C',
@@ -14,6 +15,10 @@ export const CONTRACTS = {
   GlofiChallenge: {
     address: '0x5c87511BEF3CddD7e1cfdABfA7173F6DA7554784',
     abi: GlofiChallengeABI,
+  },
+  GlofiPayout: {
+    address: '0x78A9401c255Af3Df3DA73fbE7Fd7bB423a2d5d6c',
+    abi: GlofiPayoutABI,
   },
 }
 
