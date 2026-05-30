@@ -18,7 +18,8 @@ export default function Home() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7 }}
-                    className="text-7xl font-bold text-center mb-6"
+                    className="text-7xl md:text-8xl font-bold text-center mb-6 bg-clip-text text-transparent"
+                    style={{ backgroundImage: 'linear-gradient(135deg, #ffffff 0%, #a8c8e8 50%, #7eb3d4 100%)' }}
                 >
                     The Future of Prop Trading
                 </motion.h1>
@@ -128,18 +129,36 @@ export default function Home() {
                 className="border-t border-gray-800 px-6 py-16"
             >
                 <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <div>
-                        <p className="text-4xl font-bold mb-2">$0</p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                        viewport={{ once: true }}
+                    >
+                        <p className="text-4xl font-bold mb-2 text-blue-300">$0</p>
                         <p className="text-gray-400">Total Pool Size</p>
-                    </div>
-                    <div>
-                        <p className="text-4xl font-bold mb-2">0</p>
-                        <p className="text-gray-400">Active Traders</p>
-                    </div>
-                    <div>
-                        <p className="text-4xl font-bold mb-2">0%</p>
-                        <p className="text-gray-400">Average Monthly Return</p>
-                    </div>
+                        <p className="text-gray-600 text-xs mt-1">Grows with every deposit</p>
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        viewport={{ once: true }}
+                    >
+                        <p className="text-4xl font-bold mb-2 text-blue-300">5</p>
+                        <p className="text-gray-400">Smart Contracts</p>
+                        <p className="text-gray-600 text-xs mt-1">Live on Polygon</p>
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                        viewport={{ once: true }}
+                    >
+                        <p className="text-4xl font-bold mb-2 text-blue-300">15M</p>
+                        <p className="text-gray-400">GLOFI in Circulation</p>
+                        <p className="text-gray-600 text-xs mt-1">Founding allocation</p>
+                    </motion.div>
                 </div>
             </motion.div>
 

@@ -49,6 +49,9 @@ export default function Navbar() {
                         <Link href="/governance" className="text-gray-400 hover:text-white transition">
                             Governance
                         </Link>
+                        <Link href="/about" className="text-white hover:text-gray-300 transition">
+                            About
+                        </Link>
                         {connected && (
                             <Link href="/dashboard" className="text-gray-400 hover:text-white transition font-semibold">
                                 Dashboard
