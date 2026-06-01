@@ -94,5 +94,5 @@ export function useGlofiToken(walletAddress?: string) {
       return null
     }
   }
-  return { tokenBalance, totalSupply, usdcDeposited, totalPoolValue, reservedLiquidity, freeLiquidity, loading, error }
+  return { tokenBalance, totalSupply, usdcDeposited, totalPoolValue, reservedLiquidity, freeLiquidity, loading, error, depositToPool }
 }
