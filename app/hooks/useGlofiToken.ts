@@ -94,5 +94,28 @@ export function useGlofiToken(walletAddress?: string) {
       return null
     }
   }
-  return { tokenBalance, totalSupply, usdcDeposited, totalPoolValue, reservedLiquidity, freeLiquidity, loading, error, depositToPool }
+
+  async function withdrawFromPool(tokenAmount: string) {
+    try {
+      const provider = new ethers.BrowserProvider((window as any).ethereum)
+      const signer = await provider.getSigner()
+
+      const poolContract = new ethers.Contract(
+        CONTRACTS.GlofiPool.address,
+        CONTRACTS.GlofiPool.abi,
+        signer
+      )
+
+      const amount = ethers.parseEther(tokenAmount)
+      const tx = await poolContract.withdraw(amount)
+      await tx.wait()
+      return tx.hash
+
+    } catch (err: any) {
+      console.error('Withdrawal failed:', err)
+      return null
+    }
+  }
+
+  return { tokenBalance, totalSupply, usdcDeposited, totalPoolValue, reservedLiquidity, freeLiquidity, loading, error, depositToPool, withdrawFromPool }
 }

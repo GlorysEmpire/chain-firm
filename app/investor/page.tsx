@@ -8,7 +8,7 @@ import { useWallet } from '../WalletContext'
 import { useGlofiToken } from '../hooks/useGlofiToken'
 export default function InvestorPage() {
     const { connected, walletAddress, connectWallet } = useWallet()
-    const { tokenBalance, totalSupply, usdcDeposited, totalPoolValue, freeLiquidity, loading: tokenLoading, depositToPool } = useGlofiToken(walletAddress)
+    const { tokenBalance, totalSupply, usdcDeposited, totalPoolValue, freeLiquidity, loading: tokenLoading, depositToPool, withdrawFromPool } = useGlofiToken(walletAddress)
     const [amount, setAmount] = useState('')
     const [step, setStep] = useState(0)
     const [deposited, setDeposited] = useState(false)
@@ -16,6 +16,9 @@ export default function InvestorPage() {
     const [depositing, setDepositing] = useState(false)
     const [depositTx, setDepositTx] = useState<string | null>(null)
     const [depositError, setDepositError] = useState<string | null>(null)
+    const [withdrawAmount, setWithdrawAmount] = useState('')
+    const [withdrawing, setWithdrawing] = useState(false)
+    const [withdrawTx, setWithdrawTx] = useState<string | null>(null)
 
     // If wallet disconnects mid-flow, reset to start
     useEffect(() => {
@@ -86,7 +89,7 @@ export default function InvestorPage() {
                 )}
             </div>
 
-            {/* Deposit Section */}
+            {/* Deposit & Withdraw Sections */}
             <div className="max-w-lg mx-auto px-6 pb-10">
                 <div className="border border-gray-800 rounded-2xl p-8 mb-10">
                     <h2 className="text-2xl font-bold mb-6">Deposit USDC</h2>
@@ -158,6 +161,57 @@ export default function InvestorPage() {
                             <p className="text-gray-500 text-xs mt-3">
                                 You will be asked to approve USDC spending, then confirm the deposit. Two transactions total.
                             </p>
+                        </div>
+                    )}
+                </div>
+
+                <div className="border border-gray-800 rounded-2xl p-8 mb-10">
+                    <h2 className="text-2xl font-bold mb-6">Withdraw USDC</h2>
+                    <p className="text-gray-400 mb-6">
+                        Burn your GLOFI tokens to withdraw your share of the pool as USDC.
+                        Withdrawals are only possible when there is sufficient free liquidity.
+                    </p>
+                    {!connected ? (
+                        <button onClick={connectWallet} className="w-full bg-white text-black py-4 rounded-full font-semibold hover:bg-gray-200 transition">
+                            Connect Wallet to Withdraw
+                        </button>
+                    ) : withdrawTx ? (
+                        <div className="bg-gray-900 rounded-xl p-6 text-center">
+                            <p className="text-green-400 font-bold text-lg mb-2">Withdrawal Successful</p>
+                            <p className="text-gray-400 text-sm mb-4">Your USDC has been returned.</p>
+                            <a href={`https://amoy.polygonscan.com/tx/${withdrawTx}`} target="_blank" rel="noopener noreferrer" className="text-blue-300 text-sm hover:text-white">
+                                View transaction
+                            </a>
+                            <button onClick={() => { setWithdrawTx(null); setWithdrawAmount('') }} className="block w-full mt-4 border border-gray-700 text-gray-400 py-3 rounded-full hover:border-white hover:text-white transition">
+                                Make Another Withdrawal
+                            </button>
+                        </div>
+                    ) : (
+                        <div>
+                            <div className="flex gap-4 mb-4">
+                                <input
+                                    type="number"
+                                    placeholder="GLOFI tokens to burn"
+                                    value={withdrawAmount}
+                                    onChange={(e) => setWithdrawAmount(e.target.value)}
+                                    className="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-300"
+                                />
+                                <button
+                                    onClick={async () => {
+                                        if (!withdrawAmount || Number(withdrawAmount) <= 0) return
+                                        setWithdrawing(true)
+                                        const hash = await withdrawFromPool(withdrawAmount)
+                                        if (hash) setWithdrawTx(hash)
+                                        setWithdrawing(false)
+                                    }}
+                                    disabled={withdrawing || !withdrawAmount}
+                                    className="bg-white text-black px-8 py-3 rounded-xl font-semibold hover:bg-gray-200 transition disabled:opacity-50"
+                                >
+                                    {withdrawing ? 'Processing...' : 'Withdraw'}
+                                </button>
+                            </div>
+                            <p className="text-gray-400 text-sm">Your balance: {Number(tokenBalance).toLocaleString()} GLOFI</p>
+                            <p className="text-gray-500 text-xs mt-2">Withdrawal blocked if funded traders are active — your capital is protecting them.</p>
                         </div>
                     )}
                 </div>
