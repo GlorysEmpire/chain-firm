@@ -52,6 +52,7 @@ export default function Navbar() {
                         <Link href="/about" className="text-white hover:text-gray-300 transition">
                             About
                         </Link>
+                        <Link href="/contracts-info" className="text-white hover:text-gray-300 transition">Contracts</Link>
                         {connected && (
                             <Link href="/dashboard" className="text-gray-400 hover:text-white transition font-semibold">
                                 Dashboard
@@ -124,6 +125,8 @@ export default function Navbar() {
                         <Link href="/governance" onClick={() => setMenuOpen(false)} className="text-gray-400 hover:text-white transition py-2">
                             Governance
                         </Link>
+                        <Link href="/about" onClick={() => setMenuOpen(false)} className="text-white hover:text-gray-300 transition text-lg">About</Link>
+                        <Link href="/contracts-info" onClick={() => setMenuOpen(false)} className="text-white hover:text-gray-300 transition text-lg">Contracts</Link>
                         {connected && (
                             <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="text-green-400 font-semibold hover:text-green-300 transition py-2">
                                 Dashboard
