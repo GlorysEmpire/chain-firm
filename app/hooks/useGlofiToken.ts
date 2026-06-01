@@ -60,6 +60,39 @@ export function useGlofiToken(walletAddress?: string) {
 
     fetchData()
   }, [walletAddress])
+  async function depositToPool(usdcAmount: string) {
+    try {
+      const provider = new ethers.BrowserProvider((window as any).ethereum)
+      const signer = await provider.getSigner()
 
+      const usdcContract = new ethers.Contract(
+        '0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582',
+        ['function approve(address spender, uint256 amount) returns (bool)'],
+        signer
+      )
+
+      const poolContract = new ethers.Contract(
+        CONTRACTS.GlofiPool.address,
+        CONTRACTS.GlofiPool.abi,
+        signer
+      )
+
+      const amount = ethers.parseUnits(usdcAmount, 6)
+
+      // Step 1 — approve pool to spend USDC
+      const approveTx = await usdcContract.approve(CONTRACTS.GlofiPool.address, amount)
+      await approveTx.wait()
+
+      // Step 2 — deposit into pool
+      const depositTx = await poolContract.deposit(amount)
+      await depositTx.wait()
+
+      return depositTx.hash
+
+    } catch (err: any) {
+      console.error('Deposit failed:', err)
+      return null
+    }
+  }
   return { tokenBalance, totalSupply, usdcDeposited, totalPoolValue, reservedLiquidity, freeLiquidity, loading, error }
 }
